@@ -1,9 +1,6 @@
-// src/contexts/AuthContext.js
-
-import React, { createContext, useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// ... (resto do código)
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
@@ -24,18 +21,16 @@ export const AuthProvider = ({ children }) => {
     state,
     dispatch,
     signIn: async (data) => {
-      // Aqui você faria o fetch para o backend para logar
-      // Suponhamos que data inclua email e senha
-      const response = await fetch('https://your-backend.com/login', {
+      const response = await fetch('https://ze-lador.onrender.com/authenticate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
-      const json = await response.json();
-      if (response.ok) {
-        await AsyncStorage.setItem('userToken', json.token);
+      const json = await response.respose.json();
+      if (response.success) {
+        await AsyncStorage.setItem('userToken', json);
         dispatch({ type: 'LOGIN', payload: json });
       } else {
         // Tratar os erros de login aqui
@@ -47,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     },
     signUp: async (data) => {
 
-      const response = await fetch('https://your-backend.com/register', {
+      const response = await fetch('https://ze-lador.onrender.com/api/insert-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +54,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         // Tratar os erros de cadastro aqui
       }
-    },
+    }
   };
 
   return (

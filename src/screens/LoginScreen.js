@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
 import { Button, SocialIcon } from 'react-native-elements';
-import AuthContext from '../contexts/AuthContext';
+// import AuthContext from '../contexts/AuthContext';
 
-export default function LoginScreen({ navigation }) {
-  const { signIn } = useContext(AuthContext);
+const LoginScreen = ({ navigation }) => {
+  // const { signIn } = useContext(AuthContext);
 
-  const handleLogin = async () => {
-    await signIn({ email, senha });
-  };
+  // const handleLogin = async () => {
+  //   await signIn({ email, senha });
+  // };
 
   return (
     <View style={styles.container}>
@@ -45,6 +45,8 @@ export default function LoginScreen({ navigation }) {
     </View>
   );
 }
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
