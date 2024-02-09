@@ -1,13 +1,14 @@
 import { Heading, VStack,Center, FormControl } from 'native-base';
-import React from 'react';
+import React, {useEffect, useState, useContext } from 'react';
 import {useForm, Controller} from 'react-hook-form'
 import * as  yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
-
+import axios from 'axios'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import DateInput from '../components/DateInput'
-
+import Selector from '../components/Selector';
+import { useAuth  } from '../contexts/AuthContext'
 
 const signUpSchema = yup.object({
     name: yup.string().required('Informe o nome!'),
@@ -16,20 +17,43 @@ const signUpSchema = yup.object({
     password_confirm: yup.string().required('Informe a confirmação de senha!').oneOf([yup.ref('password'), null], 'A confirmação de senha não é igual.'),
 });
 
-const SignUp = () => {
+const SignUp = ({user_email}) => {
+    const [blocos, setBlocos] = useState([]); // Deve ser carregado do backend
+    const [apartamentos, setApartamentos] = useState([]); // Deve ser carregado do backend
+    const { signUp } = useAuth();
 
-    const { control, handleSubmit, formState: {errors} } = useForm({
-        resolver: yupResolver(signUpSchema)
+    useEffect(() => {
+        // substitua o URL pelo seu endpoint
+        axios.get('https://ze-lador.onrender.com/api/unidade/unidades-by-condominio?id=1')
+          .then(response => {
+            let data = response.data.response;
+    
+            const blocosData = [...new Set(data.map(item => item.bloco))];
+            const apartamentosData = [...new Set(data.map(item => item.apartamento))];
+            email = "lfaitanin@outlook.com"
+            setApartamentos(apartamentosData)
+            setBlocos(blocosData);
+            
+          });
+      }, []);
+
+    const {control, handleSubmit, formState: {errors} } = useForm({
+        resolver: yupResolver(signUpSchema),
+        defaultValues: {
+            email: "lfaitanin@outlook.com"
+        }
     });
     
-    function handleSignUp(data){
+    const handleSignUp = async (data) => {
+
         console.log(data)
+        var result = await signUp(data);
     }
 
     return (
         <VStack bgColor="gray.100" flex={1} px={4}>
             <Center>
-                <Heading my={6}></Heading>
+                <Heading my={3}></Heading>
                 <Controller
                     control={control}
                     name="name"
@@ -43,7 +67,7 @@ const SignUp = () => {
                 />
                 <Controller
                     control={control}
-                    name="email"
+                    name="email"                    
                     render={({field: {onChange}}) => (
                         <Input 
                         placeholder="Email" 
@@ -71,6 +95,32 @@ const SignUp = () => {
                         <DateInput />
                         </FormControl>
 
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="bloco"
+                    render={({field: {onChange}}) => (
+                        <Selector 
+                        placeholder="Escolha seu bloco" 
+                        onChangeText={onChange}
+                        erorMensage={errors.document?.message}
+                        items={blocos}
+                        choose="bloco"
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="apartamento"
+                    render={({field: {onChange}}) => (
+                        <Selector 
+                        placeholder="Escolha seu apartamento" 
+                        onChangeText={onChange}
+                        erorMensage={errors.document?.message}
+                        items={apartamentos}
+                        choose="apartamento"
+                        />
                     )}
                 />
                 <Controller

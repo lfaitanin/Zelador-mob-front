@@ -3,9 +3,9 @@ import {Input as NativeBaseInput, FormControl} from 'native-base'
 const Input = ({erorMensage = null, isInvalid, ...rest}) => {
     const invalid = !!erorMensage || isInvalid; 
     return (
-        <FormControl  mb={3} isInvalid={invalid}>
+        <FormControl  mb={1} isInvalid={invalid}>
             <NativeBaseInput  
-            fontSize="md"
+            fontSize="md"            
             h={16}
             isInvalid={invalid}           
             _focus={{

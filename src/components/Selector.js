@@ -1,26 +1,21 @@
-import {Select, FormControl, CheckIcon, WarningOutlineIcon, Center} from 'native-base'
-const Selector = () => {
+import {Select, FormControl, CheckIcon, Box, Center} from 'native-base'
+import {useState} from 'react'
+const Selector = ({items, choose}) => {
+  var chooser = `Escolha o ${choose}`
 
-    return (
-      <Center>
-        <FormControl w="3/4" maxW="300" isRequired isInvalid>
-        <FormControl.Label>Choose service</FormControl.Label>
-        <Select minWidth="200" accessibilityLabel="Choose Service" placeholder="Choose Service" _selectedItem={{
+  const [service, setService] = useState("");
+  return <Center>
+        <FormControl  mb={1}>
+        <Select selectedValue={service} minW={370} minH={58} accessibilityLabel={chooser} placeholder={chooser} _selectedItem={{
         bg: "teal.600",
-        endIcon: <CheckIcon size={5} />
-      }} mt="1">
-          <Select.Item label="UX Research" value="ux" />
-          <Select.Item label="Web Development" value="web" />
-          <Select.Item label="Cross Platform Development" value="cross" />
-          <Select.Item label="UI Designing" value="ui" />
-          <Select.Item label="Backend Development" value="backend" />
+        endIcon: <CheckIcon size="5" />
+      }} mt={1} onValueChange={itemValue => setService(itemValue)}>
+          {items.map((item, index) => (
+                <Select.Item key={index} label={item} value={item} />
+              ))}
         </Select>
-        <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-          Please make a selection!
-        </FormControl.ErrorMessage>
       </FormControl>
-      </Center>
-    );
+    </Center>;
   }
 
   export default Selector;
