@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { Box, Heading, VStack, FormControl, Button, Center, Input, View } from "native-base";
+import { Box, Heading, VStack, FormControl, Button, Center, Input, View, Spacer } from "native-base";
 import Selector from '../components/Selector';
 import {useForm, Controller} from 'react-hook-form'
 import * as  yup from 'yup'
@@ -18,10 +18,11 @@ const Invite = () => {
         // substitua o URL pelo seu endpoint
         axios.get('https://ze-lador.onrender.com/api/perfil/get-all-visible')
           .then(response => {
-            let data = response.data.response;
-   
-            const perfilData = [...new Set(data.map(item => item.nomePerfil))];
-            console.log(data)
+            let data = response.data;
+            const perfilData= data.map(item => {
+                return { label: item.nomePerfil, value: item.id };
+              });
+            console.log(perfilData);
             setPerfil(perfilData)            
           });
 
@@ -29,7 +30,9 @@ const Invite = () => {
           .then(response => {
             let data = response.data.response;
     
-            const unidadeData = [...new Set(data.map(item => item.apartamento))];
+            const unidadeData = data.map(item => {
+                return { label: item.apartamento, value: item.id };
+              });
             setUnidade(unidadeData)            
           });
       }, []);
@@ -38,23 +41,25 @@ const Invite = () => {
         resolver: yupResolver(signUpSchema),
     });
     const handleSignUp = async (data) => {
-
-        axios.post('https://ze-lador.onrender.com/api/user/convidar-usuarios', {usuario: {
+        console.log(data)
+        let body = {usuarios: [{
             email: data.email,
             celular: data.celular,
-            idCondominio: data.idCondominio,
-            idPerfil: data.idPerfil
-        }, enviadoPor: ''})
+            idCondominio: data.unidade,
+            idPerfil: data.perfil
+        }], enviadoPor: ''};
+        console.log("body")
+        console.log(body)
+        axios.post('https://ze-lador.onrender.com/api/user/convidar-usuarios', body)
         .then(response => {
-            console.log(response)
+            console.log(response.data)
         });
     }
-    return  <VStack bgColor="gray.100" mt="15%">
+    return  <VStack bgColor="gray.100" mt="5%">
                 <Center>
-                        <Controller
+                    <Controller
                             control={control}
-                            name="email"       
-                            style={{ maxWidth: "95%"}}             
+                            name="email"                
                             render={({field: {onChange}}) => (
                                 <Input 
                                 placeholder="Email" 
@@ -64,6 +69,7 @@ const Invite = () => {
                                 />
                             )}
                         />
+                    <Spacer size="2" />
                     <Controller
                         control={control}
                         name="celular"                    
@@ -76,33 +82,47 @@ const Invite = () => {
                             />
                         )}
                     />
+                    <Spacer size="1" />
                     <Controller
                         control={control}
                         name="unidade"
-                        render={({field: {onChange}}) => (
+                        render={({field: {onChange, value}}) => (
                             <Selector 
-                            placeholder="Escolha sua unidade" 
-                            onChangeText={onChange}
-                            erorMensage={errors.unidade?.message}
                             items={unidade}
                             choose="unidade"
+                            value={value} // Passa o value para o Selector
+                            onChange={onChange} // Passa o onChange para o Selector
                             />
                         )}
                     />
                     <Controller
                         control={control}
                         name="perfil"
-                        render={({field: {onChange}}) => (
+                        render={({field: {onChange, value}}) => (
                             <Selector 
                             placeholder="Escolha seu perfil" 
-                            onChangeText={onChange}
                             erorMensage={errors.perfil?.message}
                             items={perfil}
                             choose="perfil"
+                            value={value} // Passa o value para o Selector
+                            onChange={onChange} // Passa o onChange para o Selector
                             />
                         )}
                     />
-                    <Button title="Criar" onPress={handleSubmit(handleSignUp)}/>
+                    <Spacer size="10" />
+                    <Button
+                        onPress={handleSubmit(handleSignUp)}
+                        size="lg" // Tamanho grande
+                        colorScheme="indigo" // Esquema de cores indigo, escolha qualquer esquema de cores disponível
+                        _text={{ color: 'white' }} // Texto do botão branco
+                        borderRadius="full" // Bordas completamente arredondadas
+                        _pressed={{ bg: "indigo.600" }} // Cor de fundo ao pressionar o botão
+                        shadow={2} // Aplica uma sombra leve
+                        // Outras propriedades de estilo que você deseja aplicar
+                    >
+                        Criar convite
+                    </Button>
+
                 </Center>
             </VStack>;
   };
