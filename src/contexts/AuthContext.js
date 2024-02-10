@@ -87,26 +87,18 @@ const AuthProvider = ({ children }) => {
       dispatch({ type: 'SIGN_OUT' });
     },
     signUp: async (data) => {
-      const response = await fetch('https://ze-lador.onrender.com/api/user/insert-user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nome: data.name,
-          dataNascimento: new Date(),
-          email: data.email,
-          documento: data.document,
-          senha: data.password,
-          preCadastro: true
-        }),
-      });
-      if (response.ok) {
-        console.log(response)
-        return response.ok;
-      } else {
-        // Tratar os erros de cadastro aqui
-      }
+      console.log(data)
+      axios.post('https://ze-lador.onrender.com/api/user/insert-user', {usuarios: [{
+              nome: data.name,
+              dataNascimento: data.dataNascimento,
+              email: data.email,
+              documento: data.document,
+              senha: data.password,
+              preCadastro: true
+        }], enviadoPor: ''})
+        .then(response => {
+            console.log(response.data)
+        });     
     },
   };
 

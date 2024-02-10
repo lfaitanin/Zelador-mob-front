@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { Container, HStack, Content, Button, Text, Icon, Card, CardItem, Body, Box } from 'native-base';
+import { View, StyleSheet } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
 const DashboardScreen = ({ route, navigation }) => {
@@ -11,29 +12,32 @@ const DashboardScreen = ({ route, navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Bem-vindo(a) ao Dashboard</Text>
-      <Text>Essa é a área logada da aplicação. Aqui você pode acessar todas as funcionalidades disponíveis para você.</Text>
-      <Button
-        title="Sair"
-        onPress={() => handleSignout()}
-        color="#ADD8E6"
-      />
-    </View>
+    <Container>
+      <HStack searchBar rounded>
+        <Text>Seu Nome</Text>
+        <Text>Condomínio - Bloco - Unidade</Text>
+      </HStack>
+      <HStack>
+        <Text>Bem-vindo(a) ao Dashboard</Text>
+        <Text>Essa é a área logada da aplicação. Aqui você pode acessar todas as funcionalidades disponíveis para você.</Text>
+
+      </HStack>
+      <HStack>
+        <Button onPress={() => handleSignout()} color="#ADD8E6">
+          <Text>Sair</Text>
+        </Button>
+      </HStack>
+
+      <HStack>
+        <Button iconLeft vertical>
+          <Icon name="apps" type="MaterialIcons" />
+          <Text>Menu</Text>
+        </Button>
+        {/* Adicione mais botões conforme necessário */}
+      </HStack>
+    </Container >
   );
 }
 
 export default DashboardScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-  },
-  title: {
-    fontSize: 20,
-    marginBottom: 20,
-  },
-});

@@ -1,5 +1,5 @@
 import {Select, FormControl, CheckIcon, Box, Center} from 'native-base'
-import {useState} from 'react'
+
 const Selector = ({ items, choose, value, onChange }) => {
   var chooser = `Escolha o ${choose}`;
 
@@ -7,14 +7,13 @@ const Selector = ({ items, choose, value, onChange }) => {
     <Center>
       <FormControl mb={1}>
         <Select
-          selectedValue={value} // Usa o valor passado por props
-          minWidth={370}
-          minHeight={58}
+          selectedValue={value} 
+          minWidth="100%"
+          placeholder={chooser}
           accessibilityLabel={chooser}
           onValueChange={(itemValue) => {
-            // Encontre o item correspondente
             const item = items.find(i => i.value === itemValue);
-            onChange(item ? item.value : null); // Passe o id para o onChange
+            onChange(item ? item.value : null); 
           }}
           _selectedItem={{
             bg: "teal.600",
