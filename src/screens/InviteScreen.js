@@ -22,14 +22,12 @@ const Invite = () => {
             const perfilData= data.map(item => {
                 return { label: item.nomePerfil, value: item.id };
               });
-            console.log(perfilData);
             setPerfil(perfilData)            
           });
 
           axios.get('https://ze-lador.onrender.com/api/unidade/unidades-by-condominio?id=1')
           .then(response => {
-            let data = response.data.response;
-    
+            let data = response.data.response;    
             const unidadeData = data.map(item => {
                 return { label: item.apartamento, value: item.id };
               });
@@ -41,16 +39,13 @@ const Invite = () => {
         resolver: yupResolver(signUpSchema),
     });
     const handleSignUp = async (data) => {
-        console.log(data)
-        let body = {usuarios: [{
+
+        axios.post('https://ze-lador.onrender.com/api/user/convidar-usuarios', {usuarios: [{
             email: data.email,
             celular: data.celular,
             idCondominio: data.unidade,
             idPerfil: data.perfil
-        }], enviadoPor: ''};
-        console.log("body")
-        console.log(body)
-        axios.post('https://ze-lador.onrender.com/api/user/convidar-usuarios', body)
+        }], enviadoPor: ''})
         .then(response => {
             console.log(response.data)
         });
@@ -90,8 +85,8 @@ const Invite = () => {
                             <Selector 
                             items={unidade}
                             choose="unidade"
-                            value={value} // Passa o value para o Selector
-                            onChange={onChange} // Passa o onChange para o Selector
+                            value={value} 
+                            onChange={onChange} 
                             />
                         )}
                     />

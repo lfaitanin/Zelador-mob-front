@@ -100,29 +100,31 @@ const SignUp = ({user_email}) => {
                 <Controller
                     control={control}
                     name="bloco"
-                    render={({field: {onChange}}) => (
+                    render={({field: {onChange, value}}) => (
                         <Selector 
                         placeholder="Escolha seu bloco" 
-                        onChangeText={onChange}
-                        erorMensage={errors.document?.message}
+                        value={value} 
+                        onChange={onChange}
+                        erorMensage={errors.bloco?.message}
                         items={blocos}
                         choose="bloco"
                         />
                     )}
                 />
-                <Controller
-                    control={control}
-                    name="apartamento"
-                    render={({field: {onChange}}) => (
-                        <Selector 
-                        placeholder="Escolha seu apartamento" 
-                        onChangeText={onChange}
-                        erorMensage={errors.document?.message}
-                        items={apartamentos}
-                        choose="apartamento"
-                        />
-                    )}
-                />
+                  <Controller
+                        control={control}
+                        name="apartamento"
+                        render={({field: {onChange, value}}) => (
+                            <Selector 
+                            placeholder="Escolha seu apartamento" 
+                            erorMensage={errors.apartamento?.message}
+                            items={apartamentos}
+                            choose="apartamento"
+                            value={value} // Passa o value para o Selector
+                            onChange={onChange} // Passa o onChange para o Selector
+                            />
+                        )}
+                    />
                 <Controller
                     control={control}
                     name="password"

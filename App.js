@@ -17,9 +17,9 @@ export default function App() {
       <NativeBaseProvider>   
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="Envie um convite!" component={Invite} />
-            <Stack.Screen name="Criar sua conta" component={SignUp} />
-            <Stack.Screen name="Dashboard" component={DashboardScreen} />
+          <Stack.Screen name="Dashboard" component={DashboardScreen} />
+          <Stack.Screen name="Criar sua conta" component={SignUp} />
+          <Stack.Screen name="Envie um convite!" component={Invite} />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeBaseProvider>

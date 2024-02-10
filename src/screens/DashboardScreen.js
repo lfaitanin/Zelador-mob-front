@@ -1,31 +1,54 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { Container, HStack, Content, Button, Text, Icon, Card, CardItem, Body, Box } from 'native-base';
 
 const DashboardScreen = ({navigation}) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Bem-vindo(a) ao Dashboard</Text>
-      <Text>Essa é a área logada da aplicação. Aqui você pode acessar todas as funcionalidades disponíveis para você.</Text>
-      <Button
-        title="Sair"
-        onPress={()=> navigation.navigate('Login')}
-        color="#ADD8E6"
-      />
-    </View>
+    <Container>
+      <HStack searchBar rounded>
+        <Text>Seu Nome</Text>
+        <Text>Condomínio - Bloco - Unidade</Text>
+      </HStack>
+      <Box padder>
+        <Card>
+          <CardItem header button onPress={() => alert("Comunicados")}>
+            <Text>Comunicados</Text>
+          </CardItem>
+        </Card>
+        <Card>
+          <CardItem button onPress={() => alert("Encomendas")}>
+            <Body>
+              <Icon name="cube" />
+              <Text>Encomendas</Text>
+            </Body>
+          </CardItem>
+        </Card>
+        <Card>
+          <CardItem button onPress={() => alert("Boletos")}>
+            <Body>
+              <Icon name="card" />
+              <Text>Boletos</Text>
+            </Body>
+          </CardItem>
+        </Card>
+        <Card>
+          <CardItem button onPress={() => alert("Serviços")}>
+            <Body>
+              <Icon name="hammer" />
+              <Text>Serviços</Text>
+            </Body>
+          </CardItem>
+        </Card>
+      </Box>
+      <HStack>
+        <Button iconLeft vertical>
+          <Icon name="apps" type="MaterialIcons" />
+          <Text>Menu</Text>
+        </Button>
+        {/* Adicione mais botões conforme necessário */}
+      </HStack>
+    </Container>
   );
 }
 
 export default DashboardScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-  },
-  title: {
-    fontSize: 20,
-    marginBottom: 20,
-  },
-});
