@@ -1,48 +1,102 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
-import { Button, SocialIcon } from 'react-native-elements';
+import React, { useState } from 'react';
+import { Text, StyleSheet, Image, View } from 'react-native';
+import { VStack, Button, Center, Input, AlertDialog } from "native-base";
+import { useForm, Controller } from 'react-hook-form'
+import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
+
 // import AuthContext from '../contexts/AuthContext';
 
 const LoginScreen = ({ navigation }) => {
   // const { signIn } = useContext(AuthContext);
+  const { control, handleSubmit, formState: { errors } } = useForm({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  // const handleLogin = async () => {
-  //   await signIn({ email, senha });
-  // };
+  function save(key, value) {
+    SecureStore.setItem(key, value);
+  }
+
+  function getValueFor(key) {
+    let result = SecureStore.getItem(key);
+    if (result) {
+      return result;
+    } else {
+      alert('No values stored under that key.');
+    }
+  }
+  const handleLogin = (data) => {
+    setIsLoading(true);
+    console.log(data.email);
+    const url = `https://ze-lador.onrender.com/api/user/authenticate`;
+    axios.post(url, { email: data.email, senha: data.senha })
+      .then(response => {
+        console.log(response.data)
+        if (response.data.success) {
+          save(data.email.replace('@', ''), response.data.response);
+          navigation.navigate('Dashboard', { email: data.email, token: getValueFor(data.email.replace('@', '')) });
+        } else {
+          alert('Usuário ou senha inválido(s)!');
+        }
+      }).catch(err => {
+        console.log('err: ' + err);
+      }).finally(() => setIsLoading(false));
+  };
 
   return (
-    <View style={styles.container}>
+    <VStack style={styles.container}>
       <Text style={styles.header}>Zé Lador</Text>
       <Image
         source={require('./imgs/logo.png')} // substitua pelo caminho correto da imagem
         style={styles.logo}
       />
-      <TextInput
-        placeholder="Usuário, email & documento"
-        style={styles.input}
+      <Controller
+        control={control}
+        name="email"
+        render={({ field: { onChange } }) => (
+          <Input
+            placeholder="Email"
+            onChangeText={onChange}
+            erorMensage={errors.email?.message}
+            style={{ maxWidth: "55%", minHeight: 15, padding: "10" }}
+          />
+        )}
       />
-      <TextInput
-        placeholder="Senha"
-        secureTextEntry
-        style={styles.input}
+      <Controller
+        control={control}
+        name="senha"
+        render={({ field: { onChange } }) => (
+          <Input
+            secureTextEntry={true}
+            placeholder="Senha"
+            onChangeText={onChange}
+            erorMensage={errors.token?.message}
+            style={{ maxWidth: "55%", minHeight: 15, padding: "10" }}
+          />
+        )}
       />
-      <TouchableOpacity>
-        <Text style={styles.forgotPassword} onPress={() => navigation.navigate('Cadastro')}>Cadastre-se</Text>
-      </TouchableOpacity>
       <Button
-        title="Entrar"
-        buttonStyle={styles.loginButton}
-        onPress={() => handleLogin}
-      />
-      <View style={styles.socialLoginSection}>
+        onPress={handleSubmit(handleLogin)}
+        size="lg" // Tamanho grande
+        colorScheme="indigo" // Esquema de cores indigo, escolha qualquer esquema de cores disponível
+        _text={{ color: 'white' }} // Texto do botão branco
+        borderRadius="full" // Bordas completamente arredondadas
+        _pressed={{ bg: "indigo.600" }} // Cor de fundo ao pressionar o botão
+        shadow={2} // Aplica uma sombra leve
+        _loading={isLoading}
+      // Outras propriedades de estilo que você deseja aplicar
+      >
+        Entrar
+      </Button>
+
+      {/* <View style={styles.socialLoginSection}>
         <Text style={styles.socialLoginText}>Faça login com:</Text>
         <View style={styles.socialIcons}>
           <SocialIcon type="google" />
           <SocialIcon type="facebook" />
           <SocialIcon type="apple" />
         </View>
-      </View>
-    </View>
+      </View> */}
+    </VStack>
   );
 }
 
