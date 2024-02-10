@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, HStack, Content, Button, Text, Icon, Card, CardItem, Body, Box } from 'native-base';
 import { View, StyleSheet } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
 
 const DashboardScreen = ({ route, navigation }) => {
   console.log(JSON.stringify(route));

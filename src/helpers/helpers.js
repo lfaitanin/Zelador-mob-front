@@ -1,14 +1,13 @@
-export const Utils = () => {
+import * as SecureStore from 'expo-secure-store';
 
-    const formatEmailToStore = (email) => {
+const helpers = {
+    formatEmailToStore: function (email) {
         return email.replace('@', '');
-    }
-
-    function saveToken(key, value) {
+    },
+    saveToken: function (key, value) {
         SecureStore.setItem(key, value);
-    }
-
-    function getToken(key) {
+    },
+    getToken: function (key) {
         let result = SecureStore.getItem(key);
         if (result) {
             return result;
@@ -17,3 +16,5 @@ export const Utils = () => {
         }
     }
 };
+
+export default helpers;

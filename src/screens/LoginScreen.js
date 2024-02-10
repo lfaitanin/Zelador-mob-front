@@ -3,27 +3,12 @@ import { Text, StyleSheet, Image, View } from 'react-native';
 import { VStack, Button, Center, Input, AlertDialog } from "native-base";
 import { useForm, Controller } from 'react-hook-form'
 import axios from 'axios';
-import * as SecureStore from 'expo-secure-store';
-
-// import AuthContext from '../contexts/AuthContext';
+import helpers from '../helpers/helpers';
 
 const LoginScreen = ({ navigation }) => {
-  // const { signIn } = useContext(AuthContext);
   const { control, handleSubmit, formState: { errors } } = useForm({});
   const [isLoading, setIsLoading] = useState(false);
 
-  function save(key, value) {
-    SecureStore.setItem(key, value);
-  }
-
-  function getValueFor(key) {
-    let result = SecureStore.getItem(key);
-    if (result) {
-      return result;
-    } else {
-      alert('No values stored under that key.');
-    }
-  }
   const handleLogin = (data) => {
     setIsLoading(true);
     console.log(data.email);
@@ -32,8 +17,8 @@ const LoginScreen = ({ navigation }) => {
       .then(response => {
         console.log(response.data)
         if (response.data.success) {
-          save(data.email.replace('@', ''), response.data.response);
-          navigation.navigate('Dashboard', { email: data.email, token: getValueFor(data.email.replace('@', '')) });
+          helpers.saveToken(helpers.formatEmailToStore(data.email), response.data.response);
+          navigation.navigate('Dashboard', { email: data.email, token: helpers.getToken(data.email.replace('@', '')) });
         } else {
           alert('Usuário ou senha inválido(s)!');
         }
