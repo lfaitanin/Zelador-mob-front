@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, Image, View } from 'react-native';
-import { VStack, Button, Center, Input, AlertDialog } from "native-base";
-import { useForm, Controller } from 'react-hook-form'
+import { Image, StyleSheet } from 'react-native';
+import { VStack, Button, Input, Text, Center } from 'native-base';
+import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import helpers from '../helpers/helpers';
 
 const LoginScreen = ({ navigation }) => {
-  const { control, handleSubmit, formState: { errors } } = useForm({});
+  const { control, handleSubmit, formState: { errors } } = useForm();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = (data) => {
@@ -29,110 +29,95 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <VStack style={styles.container}>
-      <Text style={styles.header}>Zé Lador</Text>
-      <Image
-        source={require('./imgs/logo.png')} // substitua pelo caminho correto da imagem
-        style={styles.logo}
-      />
-      <Controller
-        control={control}
-        name="email"
-        render={({ field: { onChange } }) => (
-          <Input
-            placeholder="Email"
-            onChangeText={onChange}
-            erorMensage={errors.email?.message}
-            style={{ maxWidth: "55%", minHeight: 15, padding: "10" }}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="senha"
-        render={({ field: { onChange } }) => (
-          <Input
-            secureTextEntry={true}
-            placeholder="Senha"
-            onChangeText={onChange}
-            erorMensage={errors.token?.message}
-            style={{ maxWidth: "55%", minHeight: 15, padding: "10" }}
-          />
-        )}
-      />
-      <Button
-        onPress={handleSubmit(handleLogin)}
-        size="lg" // Tamanho grande
-        colorScheme="indigo" // Esquema de cores indigo, escolha qualquer esquema de cores disponível
-        _text={{ color: 'white' }} // Texto do botão branco
-        borderRadius="full" // Bordas completamente arredondadas
-        _pressed={{ bg: "indigo.600" }} // Cor de fundo ao pressionar o botão
-        shadow={2} // Aplica uma sombra leve
-        _loading={isLoading}
-      // Outras propriedades de estilo que você deseja aplicar
-      >
-        Entrar
-      </Button>
+      <Center maxW="300px">
+        <Image source={require('./imgs/logo_zelador.png')} style={styles.logo} />
+      </Center>
+      <Center style={{ marginTop: 40 }}>
+        <Text bold style={{ fontSize: 18 }}>Informe seus dados para acessar a sua conta</Text>
+      </Center>
 
-      {/* <View style={styles.socialLoginSection}>
-        <Text style={styles.socialLoginText}>Faça login com:</Text>
-        <View style={styles.socialIcons}>
-          <SocialIcon type="google" />
-          <SocialIcon type="facebook" />
-          <SocialIcon type="apple" />
-        </View>
-      </View> */}
-    </VStack>
+      <Center style={{ marginTop: 80 }}>
+        <Controller
+          control={control}
+          rules={{
+            required: 'E-mail é obrigatório',
+            pattern: {
+              value: /^\S+@\S+$/i,
+              message: 'E-mail inválido',
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              placeholder="E-mail"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              autoCapitalize="none"
+              keyboardType="email-address"
+            />
+          )}
+          name="email"
+          defaultValue=""
+        />
+        {errors.email && <Text color="danger.500">{errors.email.message}</Text>}
+      </Center>
+      <Center style={{ marginTop: 10 }}>
+        <Controller
+          control={control}
+          rules={{
+            required: 'A senha é obrigatória',
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              placeholder="Senha"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              secureTextEntry
+            />
+          )}
+          name="senha"
+          defaultValue=""
+        />
+        {errors.password && <Text color="danger.500">{errors.password.message}</Text>}
+
+        <Button
+          onPress={handleSubmit(handleLogin)}
+          style={{ marginTop: 50 }}
+          width={150}
+          backgroundColor='#db6729'
+          size="lg" // Tamanho grande
+          colorScheme="indigo" // Esquema de cores indigo, escolha qualquer esquema de cores disponível
+          _text={{ color: 'white' }} // Texto do botão branco
+          _pressed={{ bg: "indigo.600" }} // Cor de fundo ao pressionar o botão
+          shadow={2} // Aplica uma sombra leve
+        // Outras propriedades de estilo que você deseja aplicar
+        >
+          Entrar
+        </Button>
+
+        <Button variant="link" _text={{ color: '#db6729' }}>
+          Esqueceu sua senha?
+        </Button>
+      </Center >
+    </VStack >
   );
-}
-
-export default LoginScreen;
+};
 
 const styles = StyleSheet.create({
   container: {
+    space: 4,
     flex: 1,
     alignItems: 'center',
     backgroundColor: 'white',
-  },
-  header: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginTop: 50,
-    marginBottom: 20,
+    padding: 5,
   },
   logo: {
-    width: 200,
-    height: 200,
-    marginBottom: 20,
-  },
-  input: {
-    width: '80%',
-    padding: 15,
-    margin: 10,
-    borderWidth: 1,
-    borderColor: '#CCC',
-    borderRadius: 5,
-  },
-  forgotPassword: {
-    color: 'blue',
-    marginBottom: 20,
-  },
-  loginButton: {
-    backgroundColor: 'blue',
-    borderRadius: 25,
-    width: 200,
-    height: 50,
-    justifyContent: 'center',
-  },
-  socialLoginSection: {
-    alignItems: 'center',
-  },
-  socialLoginText: {
-    fontSize: 16,
-    marginVertical: 20,
-  },
-  socialIcons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '60%',
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    alignSelf: 'center',
   },
 });
+
+export default LoginScreen;

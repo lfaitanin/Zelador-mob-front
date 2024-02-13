@@ -6,7 +6,7 @@ import Invite from './src/screens/InviteScreen';
 
 import CadastroScreen from './src/screens/CadastroScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
-import PreLoginScreen from './src/screens/PreLoginScreen';
+import WelcomeScreen from './src/screens/WelcomeScreen';
 import HasInviteScreen from './src/screens/HasInviteScreen';
 
 import LoginScreen from './src/screens/LoginScreen';
@@ -21,7 +21,7 @@ export default function App() {
       <NativeBaseProvider>   
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="Bem vindo!" component={PreLoginScreen} />
+            <Stack.Screen name="Bem vindo!" component={WelcomeScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Cadastro" component={SignUp} />
             <Stack.Screen name="Dashboard" component={DashboardScreen} />
