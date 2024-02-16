@@ -4,11 +4,6 @@ import { Button, SocialIcon } from 'react-native-elements';
 // import AuthContext from '../contexts/AuthContext';
 
 const WelcomeScreen = ({ navigation }) => {
-  // const { signIn } = useContext(AuthContext);
-
-  // const handleLogin = async () => {
-  //   await signIn({ email, senha });
-  // };
 
   return (
     <View style={styles.container}>

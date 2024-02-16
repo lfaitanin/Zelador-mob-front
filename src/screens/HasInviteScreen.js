@@ -97,7 +97,7 @@ const HasInviteScreen = ({ navigation }) => {
           _text={{ color: 'white' }} // Texto do botão branco
           _pressed={{ bg: "indigo.600" }} // Cor de fundo ao pressionar o botão
           shadow={2} // Aplica uma sombra leve
-          _loading={isLoading}
+          isLoading={isLoading}
         // Outras propriedades de estilo que você deseja aplicar
         >
           Validar

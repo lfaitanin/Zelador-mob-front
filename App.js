@@ -8,6 +8,7 @@ import CadastroScreen from './src/screens/CadastroScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import HasInviteScreen from './src/screens/HasInviteScreen';
+import NotificationsScreen from './src/screens/NotificationsScreen';
 
 import LoginScreen from './src/screens/LoginScreen';
 import { NativeBaseProvider } from 'native-base';
@@ -26,6 +27,7 @@ export default function App() {
             <Stack.Screen name="Cadastro" component={SignUp} />
             <Stack.Screen name="Dashboard" component={DashboardScreen} />
             <Stack.Screen name="HasInvite" component={HasInviteScreen} />
+            <Stack.Screen name="Notificações" component={NotificationsScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeBaseProvider>

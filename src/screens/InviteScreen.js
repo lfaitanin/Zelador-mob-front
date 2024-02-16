@@ -114,7 +114,8 @@ const Invite = () => {
                 _text={{ color: 'white' }} // Texto do botão branco
                 borderRadius="full" // Bordas completamente arredondadas
                 _pressed={{ bg: "indigo.600" }} // Cor de fundo ao pressionar o botão
-                shadow={2} // Aplica uma sombra leve
+                shadow={2}
+                isLoading // Aplica uma sombra leve
             // Outras propriedades de estilo que você deseja aplicar
             >
                 Criar convite

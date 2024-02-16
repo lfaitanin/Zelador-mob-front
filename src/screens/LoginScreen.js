@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, TouchableWithoutFeedback, Keyboard  } from 'react-native';
 import { VStack, Button, Input, Text, Center } from 'native-base';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
@@ -25,9 +25,11 @@ const LoginScreen = ({ navigation }) => {
       }).catch(err => {
         console.log('err: ' + err);
       }).finally(() => setIsLoading(false));
+      
   };
 
   return (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     <VStack style={styles.container}>
       <Center maxW="300px">
         <Image source={require('./imgs/logo_zelador.png')} style={styles.logo} />
@@ -37,6 +39,7 @@ const LoginScreen = ({ navigation }) => {
       </Center>
 
       <Center style={{ marginTop: 80 }}>
+
         <Controller
           control={control}
           rules={{
@@ -86,12 +89,13 @@ const LoginScreen = ({ navigation }) => {
           style={{ marginTop: 50 }}
           width={150}
           backgroundColor='#db6729'
-          size="lg" // Tamanho grande
-          colorScheme="indigo" // Esquema de cores indigo, escolha qualquer esquema de cores disponível
-          _text={{ color: 'white' }} // Texto do botão branco
-          _pressed={{ bg: "indigo.600" }} // Cor de fundo ao pressionar o botão
-          shadow={2} // Aplica uma sombra leve
-        // Outras propriedades de estilo que você deseja aplicar
+          size="lg" 
+          colorScheme="indigo" 
+          _text={{ color: 'white' }} 
+          _pressed={{ bg: "indigo.600" }} 
+          shadow={2} 
+          isLoading={isLoading} 
+          isLoadingText='Entrando'
         >
           Entrar
         </Button>
@@ -101,6 +105,7 @@ const LoginScreen = ({ navigation }) => {
         </Button>
       </Center >
     </VStack >
+    </TouchableWithoutFeedback>
   );
 };
 

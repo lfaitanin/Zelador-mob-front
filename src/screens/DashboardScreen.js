@@ -94,8 +94,8 @@ const DashboardScreen = ({ route, navigation }) => {
 
         {notificacoes !== undefined && notificacoes.length > 0 &&
           <View>
-            <Icon name="notifications" size={30} color="#e6e600" />
-            <Text style={{ alignSelf: 'center' }}>{notificacoes.length}</Text>
+            <Icon name="notifications" size={30} color="#e6e600" onPress={() => navigation.navigate('Notificações')}/>
+            <Text  style={{ alignSelf: 'center' }}>{notificacoes.length}</Text>
           </View>
         }
         {notificacoes !== undefined && notificacoes.length === 0 &&
