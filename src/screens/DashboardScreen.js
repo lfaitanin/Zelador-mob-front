@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import helpers from '../helpers/helpers';
+import { Path } from "react-native-svg";
+
 import axios from 'axios'
+import { Button, Actionsheet, useDisclose, Box, Center, NativeBaseProvider } from "native-base";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 
 const DashboardScreen = ({ route, navigation }) => {
   const userParams = route.params;
@@ -12,6 +16,11 @@ const DashboardScreen = ({ route, navigation }) => {
   const [notificacoes, setNotificacoes] = useState([]);
   const [modulos, setModulos] = useState([]);
   const [user, setUser] = useState({});
+  const {
+    isOpen,
+    onOpen,
+    onClose
+  } = useDisclose();
 
   useEffect(() => {
     //functions 
@@ -80,7 +89,6 @@ const DashboardScreen = ({ route, navigation }) => {
           <Text style={styles.userName}>Olá, {user.nome !== undefined && user.nome}
             {user.nome === undefined && 'usuário'}
           </Text>
-
           {user.nome !== undefined && user.nome !== '' &&
             <Text style={styles.userDetails}>
               Condomínio {user.condominio} - Bloco {user.bloco} Unidade {user.unidade}</Text>
@@ -91,8 +99,8 @@ const DashboardScreen = ({ route, navigation }) => {
         </View>
 
         {notificacoes !== undefined && notificacoes.length > 0 &&
-          <View>
-            <Icon name="notifications" size={30} color="#e6e600" onPress={() => navigation.navigate('Notificações', notificacoes.map(a => a.idUnidadeUsuario)[0])}/>
+          <View style={{ paddingRight: '53px' }}>
+            <Icon   name="notifications" size={30} color="#e6e600" onPress={() => navigation.navigate('Notificações', notificacoes.map(a => a.idUnidadeUsuario)[0])}/>
             <Text  style={{ alignSelf: 'center' }}>{notificacoes.length}</Text>
           </View>
         }
@@ -126,17 +134,34 @@ const DashboardScreen = ({ route, navigation }) => {
           <Icon name="construct-outline" size={30} />
           <Text>Serviços</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.serviceButton}>
+        <TouchableOpacity onPress={onOpen} style={styles.serviceButton}>
           <Icon name="add-circle-outline" size={30} />
+          <Actionsheet isOpen={isOpen} onClose={onClose}>
+                    <Actionsheet.Content>
+                    <Box w="100%" h={60} px={4} justifyContent="center">
+                        <Text fontSize="16" color="gray.500" _dark={{
+                        color: "gray.300"
+                    }}>
+                        Atalhos
+                        </Text>
+                    </Box>
+                    <Actionsheet.Item startIcon={<Icon as={MaterialIcons} name="add-circle-outline" size={21}/>}>
+                      Menu 1
+                    </Actionsheet.Item>
+                    <Actionsheet.Item startIcon={<Icon as={MaterialIcons} name="add-circle-outline" size={21}/>}>
+                    Menu 2
+                    </Actionsheet.Item>
+                    <Actionsheet.Item startIcon={<Icon as={Ionicons} name="add-circle-outline"  size={21}/>}>
+                    Menu 3
+                    </Actionsheet.Item>
+                    <Actionsheet.Item startIcon={<Icon as={MaterialIcons}  name="add-circle-outline" size={21}/>}>
+                    Menu 4
+                    </Actionsheet.Item>
+                    </Actionsheet.Content>
+                </Actionsheet>
           <Text>Adicionar atalho</Text>
         </TouchableOpacity>
-      </View>
-
-      {/* Footer Shortcut Bar */}
-      <View style={styles.shortcutBar}>
-        <Icon name="home-outline" size={30} style={styles.shortcutIcon} />
-        <Icon name="menu-outline" size={30} style={styles.shortcutIcon} />
-      </View>
+      </View>      
     </View>
   );
 };
@@ -144,14 +169,15 @@ const DashboardScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor:  '#f8f8f8',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 20,
+    padding: 6,
     backgroundColor: '#f8f8f8',
+    marginTop: 22
   },
   userPhoto: {
     width: 50,
@@ -196,7 +222,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 470,
   },
   serviceButton: {
     alignItems: 'center',
@@ -209,6 +235,7 @@ const styles = StyleSheet.create({
     paddingVertical: 300,
   },
   shortcutIcon: {
+    marginLeft: 255,
     color: '#333',
   },
 });

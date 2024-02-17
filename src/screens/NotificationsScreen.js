@@ -29,7 +29,7 @@ const NotificationsScreen = ({ route, navigation }) => {
             id: elem.id,
             remetente: elem.remetente,
             mensagem: elem.mensagem,
-            dataEntregue: elem.dataEntregue,
+            dataEntregue: elem.dataEntregue.toLocaleDateString('pt-BR'),
             idUnidadeUsuaria: elem.idUnidadeUsuaria,
             lida: elem.dataEntregue == null ? true : false
           } 

@@ -21,11 +21,11 @@ export default function App() {
     <AuthProvider>
       <NativeBaseProvider>   
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator >
             <Stack.Screen name="Bem vindo!" component={WelcomeScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Cadastro" component={SignUp} />
-            <Stack.Screen name="Dashboard" component={DashboardScreen} />
+            <Stack.Screen options={{headerShown: false}}name="Dashboard" component={DashboardScreen} />
             <Stack.Screen name="HasInvite" component={HasInviteScreen} />
             <Stack.Screen name="Notificações" component={NotificationsScreen} />
           </Stack.Navigator>
