@@ -1,66 +1,75 @@
-import React from "react";
-import { Box, FlatList, Heading, Icon, HStack, VStack, Text, Spacer, Center, NativeBaseProvider } from "native-base";
+import React, {useEffect, useState} from "react";
+import { Box, FlatList, Heading, Icon, HStack, VStack, Text, Spacer, Center, NativeBaseProvider, InfoIcon, Pressable } from "native-base";
+import axios from 'axios'
 
-const NotificationsScreen = ({ navigation }) => {
-    const data = [{
-        id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-        fullName: "Administração",
-        timeStamp: "12:47 PM",
-        recentText: "Good Day!",
-        avatarUrl: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-      }, {
-        id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-        fullName: "Administração",
-        timeStamp: "11:11 PM",
-        recentText: "Cheer up, there!",
-        avatarUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyEaZqT3fHeNrPGcnjLLX1v_W4mvBlgpwxnA&usqp=CAU"
-      }, {
-        id: "58694a0f-3da1-471f-bd96-145571e29d72",
-        fullName: "Administração",
-        timeStamp: "6:22 PM",
-        recentText: "Good Day!",
-        avatarUrl: "https://miro.medium.com/max/1400/0*0fClPmIScV5pTLoE.jpg"
-      }, {
-        id: "68694a0f-3da1-431f-bd56-142371e29d72",
-        fullName: "Administração",
-        timeStamp: "8:56 PM",
-        recentText: "All the best",
-        avatarUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr01zI37DYuR8bMV5exWQBSw28C1v_71CAh8d7GP1mplcmTgQA6Q66Oo--QedAN1B4E1k&usqp=CAU"
-      }, {
-        id: "28694a0f-3da1-471f-bd96-142456e29d72",
-        fullName: "Administração",
-        timeStamp: "12:47 PM",
-        recentText: "I will call today.",
-        avatarUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwgu1A5zgPSvfE83nurkuzNEoXs9DMNr8Ww&usqp=CAU"
-      }];
+const NotificationsScreen = ({ route, navigation }) => {
+  const [notificacoes, setNotificacoes] = useState([]);
+  const idUnidadeUsuaria = route.params;
+
+  useEffect(() => {
+   
+    getNotifications()
+  }, []);
+
+  const handlePress = (params) => {
+
+    axios.put(`https://ze-lador.onrender.com/api/notificacao/marcar-como-lida?id=${params.id}`)
+    .then(response => {
+      console.log(response)
+      getNotifications()
+    });
+  };
+
+  const getNotifications = () => {
+    axios.get(`https://ze-lador.onrender.com/api/dashboard/get-notificacoes?idUnidadeUsuario=${idUnidadeUsuaria}`)
+      .then(response => {
+        let data = response.data.response;
+        const notificacao = data.map(elem => (
+          {
+            id: elem.id,
+            remetente: elem.remetente,
+            mensagem: elem.mensagem,
+            dataEntregue: elem.dataEntregue,
+            idUnidadeUsuaria: elem.idUnidadeUsuaria,
+            lida: elem.dataEntregue == null ? true : false
+          } 
+        ));
+        setNotificacoes([]);
+        setNotificacoes(notificacao);
+    });
+  }
   return  <NativeBaseProvider>
-    <Center flex={1} px="3">
+    <Center flex={1} px="2">
   <Box>
-      <FlatList data={data} renderItem={({
+      <FlatList data={notificacoes} renderItem={({
       item
     }) => <Box borderBottomWidth="1" _dark={{
       borderColor: "muted.50"
-    }} borderColor="muted.800" pl={["0", "4"]} pr={["0", "5"]} py="2">
-            <HStack space={[2, 3]} justifyContent="space-between">
-            <Icon type="FontAwesome" name="home" />
+    }} borderColor="muted.800"  pr={250} py="11">
+            <HStack space={[2, 3]} justifyContent="space-between" >
+            <Pressable
+            key={item.id}
+            onPress={() => handlePress(item)}
+          >           
+            <InfoIcon name="question-outline" />
               <VStack>
-                <Text _dark={{
+                <Text  _dark={{
             color: "warmGray.50"
-          }} color="coolGray.800" bold>
-                  {item.fullName}
+          }} color="coolGray.800" bold={item.lida}>
+                  {item.remetente}
                 </Text>
-                <Text color="coolGray.600" _dark={{
-            color: "warmGray.200"
+                <Text color="coolGray.600"  bold={item.lida} _dark={{
+            color: "warmGray.200" 
           }}>
-                  {item.recentText}
+                  {item.mensagem}
                 </Text>
               </VStack>
-              <Spacer />
-              <Text fontSize="xs" _dark={{
+              <Text fontSize="xs"  bold={item.lida} _dark={{
           color: "warmGray.50"
-        }} color="coolGray.800" alignSelf="flex-start">
-                {item.timeStamp}
+        }} color="coolGray.800" >
+                {item.dataEntregue == null ? new Date().toLocaleDateString() : item.dataEntregue }
               </Text>
+              </Pressable>
             </HStack>
           </Box>} keyExtractor={item => item.id} />
     </Box>

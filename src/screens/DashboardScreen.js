@@ -30,7 +30,6 @@ const DashboardScreen = ({ route, navigation }) => {
     const loadAdditionalUserData = async (user) => {
       const url = `https://ze-lador.onrender.com/api/dashboard/get-additional-user-data-by-unidade-usuario?idUnidadeUsuario=${user.idUnidadeUsuario}`;
       const { data } = await axios.get(url);
-      console.log('teste ' + JSON.stringify(data.response));
       setUser({
         email: user.email,
         token: user.token,
@@ -44,7 +43,6 @@ const DashboardScreen = ({ route, navigation }) => {
     const loadComunicados = async (user) => {
       const url = `https://ze-lador.onrender.com/api/dashboard/get-comunicados-por-condominio?idCondominio=${user.idCondominio}`;
       const { data } = await axios.get(url);
-      console.log('teste ' + JSON.stringify(data.response));
       setComunicados(data.response);
     }
 
@@ -94,7 +92,7 @@ const DashboardScreen = ({ route, navigation }) => {
 
         {notificacoes !== undefined && notificacoes.length > 0 &&
           <View>
-            <Icon name="notifications" size={30} color="#e6e600" onPress={() => navigation.navigate('Notificações')}/>
+            <Icon name="notifications" size={30} color="#e6e600" onPress={() => navigation.navigate('Notificações', notificacoes.map(a => a.idUnidadeUsuario)[0])}/>
             <Text  style={{ alignSelf: 'center' }}>{notificacoes.length}</Text>
           </View>
         }
