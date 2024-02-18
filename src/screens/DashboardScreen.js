@@ -22,6 +22,10 @@ const DashboardScreen = ({ route, navigation }) => {
     onOpen,
     onClose
   } = useDisclose();
+  
+  const moduloJaEstaFavoritado = (item, mFavoritos) => {
+    return mFavoritos.some(favorito => favorito.nome === item.nome);
+  };
 
   useEffect(() => {
     //functions 
@@ -47,9 +51,9 @@ const DashboardScreen = ({ route, navigation }) => {
         condominio: data.response.nomeCondominio,
         unidade: data.response.unidade,
         bloco: data.response.bloco,
-        imagem: data.response.imagem
+        imagem: data.response.imagem,
+        mFavoritos: data.response.modulosFavoritos
       });
-      console.log('teste imagem ' + JSON.stringify(data.response));
     }
 
     const loadComunicados = async (user) => {
@@ -127,18 +131,15 @@ const DashboardScreen = ({ route, navigation }) => {
 
       {/* Services Buttons */}
       <View style={styles.services}>
-        <TouchableOpacity style={styles.serviceButton}>
-          <Icon name="cube-outline" size={30} />
-          <Text>Encomendas</Text>
+
+       {user.mFavoritos !== undefined && user.mFavoritos.length > 0 && user.mFavoritos.map((item, index) => (
+        <TouchableOpacity key={index} style={styles.serviceButton}>
+          <Icon name={item.imagem} size={30} />
+          <Text>{item.nome}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.serviceButton}>
-          <Icon name="card-outline" size={30} />
-          <Text>Boletos</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.serviceButton}>
-          <Icon name="construct-outline" size={30} />
-          <Text>Serviços</Text>
-        </TouchableOpacity>
+      ))}
+      
+      {user.mFavoritos !== undefined && user.mFavoritos.length > 0 && user.mFavoritos.length < 4 && (
         <TouchableOpacity onPress={onOpen} style={styles.serviceButton}>
           <Icon name="add-circle-outline" size={30} />
           <Actionsheet isOpen={isOpen} onClose={onClose}>
@@ -150,7 +151,17 @@ const DashboardScreen = ({ route, navigation }) => {
                         Atalhos
                         </Text>
                     </Box>
-                    <Actionsheet.Item startIcon={<Icon as={MaterialIcons} name="add-circle-outline" size={21}/>}>
+
+                    {modulos !== undefined && modulos.length > 0 && modulos.map((item, index) => (
+                      !moduloJaEstaFavoritado(item, user.mFavoritos) && (
+                        <Actionsheet.Item startIcon={<Icon as={MaterialIcons} name={item.imagem} size={21}/>}>
+                          {item.nome}
+                        </Actionsheet.Item>
+                      )
+                    ))}
+
+
+                    {/* <Actionsheet.Item startIcon={<Icon as={MaterialIcons} name="add-circle-outline" size={21}/>}>
                       Menu 1
                     </Actionsheet.Item>
                     <Actionsheet.Item startIcon={<Icon as={MaterialIcons} name="add-circle-outline" size={21}/>}>
@@ -161,11 +172,12 @@ const DashboardScreen = ({ route, navigation }) => {
                     </Actionsheet.Item>
                     <Actionsheet.Item startIcon={<Icon as={MaterialIcons}  name="add-circle-outline" size={21}/>}>
                     Menu 4
-                    </Actionsheet.Item>
+                    </Actionsheet.Item> */}
                     </Actionsheet.Content>
                 </Actionsheet>
           <Text>Adicionar atalho</Text>
         </TouchableOpacity>
+      )}
       </View>      
     </View>
   );
