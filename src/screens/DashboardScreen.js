@@ -192,22 +192,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 6,
+    paddingVertical: 10, // Ajustado para um espaçamento vertical maior
+    paddingHorizontal: 16, // Ajustado para um espaçamento horizontal
     backgroundColor: '#f8f8f8',
     marginTop: 22
   },
   userPhoto: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginRight: 12,
   },
   userInfo: {
     flex: 1,
-    marginLeft: 12,
+    justifyContent: 'center',
   },
   userName: {
     fontWeight: 'bold',
     fontSize: 18,
+    marginBottom: 4,
   },
   userDetails: {
     fontSize: 14,
