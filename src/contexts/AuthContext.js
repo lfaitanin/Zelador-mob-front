@@ -1,5 +1,6 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios'
 
 const AuthContext = createContext();
 
@@ -87,17 +88,20 @@ const AuthProvider = ({ children }) => {
       dispatch({ type: 'SIGN_OUT' });
     },
     signUp: async (data) => {
-      console.log(data)
-      axios.post('https://ze-lador.onrender.com/api/user/insert-user', {usuarios: [{
-              nome: data.name,
-              dataNascimento: data.dataNascimento,
-              email: data.email,
-              documento: data.document,
-              senha: data.password,
-              preCadastro: true
-        }], enviadoPor: ''})
+      var usuario = {
+        nome: data.name,
+        dataNascimento: data.dataNascimento,
+        email: data.email,
+        documento: data.document,
+        senha: data.password
+      }
+    
+      console.log(usuario)
+      axios.post('https://ze-lador.onrender.com/api/user/update-user', usuario)
         .then(response => {
-            console.log(response.data)
+          console.log(response)
+        }).catch(err => {
+          console.log(err)
         });     
     },
   };

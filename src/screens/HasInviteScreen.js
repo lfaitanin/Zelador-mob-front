@@ -10,11 +10,9 @@ const HasInviteScreen = ({ navigation }) => {
 
   const handleSignUp = async (data) => {
     setIsLoading(true);
-    console.log(data);
     const url = `https://ze-lador.onrender.com/api/validar-cadastro?token=${data.token}&email=${data.email}`;
     axios.get(url)
       .then(response => {
-        console.log(response.data)
         if (response.data.success) {
           var user = {
             email: response.data.response.email,

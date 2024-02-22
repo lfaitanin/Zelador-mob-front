@@ -11,7 +11,6 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = (data) => {
     setIsLoading(true);
-    console.log(data.email);
     const url = `https://ze-lador.onrender.com/api/user/authenticate`;
     axios.post(url, { email: data.email, senha: data.senha })
       .then(response => {

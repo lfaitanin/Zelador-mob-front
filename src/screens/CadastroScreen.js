@@ -150,41 +150,6 @@ const CadastroScreen = () => {
           </View>
         )}
       />
-      <Controller
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <Picker
-            selectedValue={value}
-            style={styles.input}
-            onValueChange={(itemValue, itemIndex) => {
-              onChange(itemValue);
-            }}>
-            {blocos.map((bloco, index) => (
-              <Picker.Item key={index} label={bloco} value={bloco} />
-            ))}
-          </Picker>
-        )}
-        name="bloco"
-        rules={{ required: true }}
-      />
-      <Controller
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <Picker
-            selectedValue={value}
-            style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => {
-              onChange(itemValue);
-            }}>
-            {apartamentos.map((apartamento, index) => (
-              <Picker.Item key={index} label={apartamento} value={apartamento} />
-            ))}
-          </Picker>
-        )}
-        name="apartamento"
-        rules={{ required: true }}
-      />
-      {/* Botão de criar */}
       <Button style={styles.button} title="Criar" onPress={handleSubmit(onSubmit)} />
     </View>
   );

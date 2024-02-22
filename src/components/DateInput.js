@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet ,Platform, Pressabl
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 
-const DateInput = () => {
+const DateInput = ( { onChange}) => {
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [dateOfBirth, setDateOfBirth ] = useState();

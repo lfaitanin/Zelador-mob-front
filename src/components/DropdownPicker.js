@@ -3,7 +3,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 const DropdownPicker = ({ label, selectedValue, onValueChange, items, placeholder }) => {
-  console.log(items)
   return (
       <Picker
         selectedValue={selectedValue}

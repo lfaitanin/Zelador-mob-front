@@ -15,7 +15,6 @@ const NotificationsScreen = ({ route, navigation }) => {
 
     axios.put(`https://ze-lador.onrender.com/api/notificacao/marcar-como-lida?id=${params.id}`)
     .then(response => {
-      console.log(response)
       getNotifications()
     });
   };

@@ -2,17 +2,19 @@ import {Select, FormControl, CheckIcon, Box, Center} from 'native-base'
 
 const Selector = ({ items, choose, value, onChange }) => {
   var chooser = `Escolha o ${choose}`;
+  console.log(items[0])
 
   return (
     <Center>
       <FormControl mb={1}>
         <Select
-          selectedValue={value} 
+          selectedValue={items[0]} 
           minWidth="100%"
           placeholder={chooser}
           accessibilityLabel={chooser}
           onValueChange={(itemValue) => {
             const item = items.find(i => i.value === itemValue);
+            console.log(itemValue)
             onChange(item ? item.value : null); 
           }}
           _selectedItem={{
