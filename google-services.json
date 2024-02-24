@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "807535319811",
+    "project_id": "ze-lador",
+    "storage_bucket": "ze-lador.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:807535319811:android:05b3dcc21225db70f22736",
+        "android_client_info": {
+          "package_name": "com.example.app123"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXfk-ac_VX0wmAmqn1YID9dokM0MVXuQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

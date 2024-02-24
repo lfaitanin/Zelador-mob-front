@@ -12,14 +12,16 @@ const WelcomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     console.log('useEffect')
-    const defaultAppMessaging = firebase.messaging();
 
     const segmentClient = createClient({
       writeKey: 'ZE-LADOR'
     });
+    
+    // const teste = messaging().getToken();
+    // console.log('token1 ' + JSON.stringify(teste));
     const deviceTokenPlugin = new DeviceTokenPlugin()
     segmentClient.add({ plugin: deviceTokenPlugin })
-    console.log('token ' + deviceTokenPlugin);
+    console.log('token ' + JSON.stringify(deviceTokenPlugin));
   }, []);
 
   return (
