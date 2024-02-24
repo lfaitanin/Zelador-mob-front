@@ -8,9 +8,12 @@ import { DeviceTokenPlugin } from '@segment/analytics-react-native-plugin-device
 
 
 const WelcomeScreen = ({ navigation }) => {
+  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
   useEffect(() => {
-  console.log('useEffect')
+    console.log('useEffect')
+    const defaultAppMessaging = firebase.messaging();
+
     const segmentClient = createClient({
       writeKey: 'ZE-LADOR'
     });
