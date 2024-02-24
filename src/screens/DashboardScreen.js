@@ -154,25 +154,11 @@ const DashboardScreen = ({ route, navigation }) => {
 
                     {modulos !== undefined && modulos.length > 0 && modulos.map((item, index) => (
                       !moduloJaEstaFavoritado(item, user.mFavoritos) && (
-                        <Actionsheet.Item startIcon={<Icon as={MaterialIcons} name={item.imagem} size={21}/>}>
+                        <Actionsheet.Item  startIcon={<Icon as={MaterialIcons} name={item.imagem} size={21}/>}>
                           {item.nome}
                         </Actionsheet.Item>
                       )
                     ))}
-
-
-                    {/* <Actionsheet.Item startIcon={<Icon as={MaterialIcons} name="add-circle-outline" size={21}/>}>
-                      Menu 1
-                    </Actionsheet.Item>
-                    <Actionsheet.Item startIcon={<Icon as={MaterialIcons} name="add-circle-outline" size={21}/>}>
-                    Menu 2
-                    </Actionsheet.Item>
-                    <Actionsheet.Item startIcon={<Icon as={Ionicons} name="add-circle-outline"  size={21}/>}>
-                    Menu 3
-                    </Actionsheet.Item>
-                    <Actionsheet.Item startIcon={<Icon as={MaterialIcons}  name="add-circle-outline" size={21}/>}>
-                    Menu 4
-                    </Actionsheet.Item> */}
                     </Actionsheet.Content>
                 </Actionsheet>
           <Text>Adicionar atalho</Text>

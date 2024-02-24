@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignUp from './src/screens/SignUp';
 import Invite from './src/screens/InviteScreen';
-
+import AgendamentoScreen from './src/screens/AgendamentoScreen';
 import CadastroScreen from './src/screens/CadastroScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
 import WelcomeScreen from './src/screens/WelcomeScreen';
@@ -28,6 +28,7 @@ export default function App() {
             <Stack.Screen options={{headerShown: false}}name="Dashboard" component={DashboardScreen} />
             <Stack.Screen name="HasInvite" component={HasInviteScreen} />
             <Stack.Screen name="Notificações" component={NotificationsScreen} />
+            <Stack.Screen name="Agendamentos" component={AgendamentoScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeBaseProvider>

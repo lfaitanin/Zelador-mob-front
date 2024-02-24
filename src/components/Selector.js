@@ -14,7 +14,6 @@ const Selector = ({ items, choose, value, onChange }) => {
           accessibilityLabel={chooser}
           onValueChange={(itemValue) => {
             const item = items.find(i => i.value === itemValue);
-            console.log(itemValue)
             onChange(item ? item.value : null); 
           }}
           _selectedItem={{
