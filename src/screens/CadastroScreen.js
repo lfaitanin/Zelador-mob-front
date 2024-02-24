@@ -11,7 +11,7 @@ const CadastroScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [blocos, setBlocos] = useState([]); // Deve ser carregado do backend
   const [apartamentos, setApartamentos] = useState([]); // Deve ser carregado do backend
-  
+
   // Carregar os blocos do backend
   useEffect(() => {
     // substitua o URL pelo seu endpoint
@@ -85,7 +85,7 @@ const CadastroScreen = () => {
             type="cpf"
             style={styles.input}
             options={{
-              maskType: 'BRL',          
+              maskType: 'BRL',
             }}
             onBlur={onBlur}
             onChangeText={value => onChange(value)}
@@ -97,7 +97,7 @@ const CadastroScreen = () => {
         rules={{ required: true }}
         defaultValue=""
       />
-       <Controller
+      <Controller
         control={control}
         name="senha"
         defaultValue=""
@@ -130,8 +130,8 @@ const CadastroScreen = () => {
           />
         )}
       />
-    {/* DatePicker */}
-    <Controller
+      {/* DatePicker */}
+      <Controller
         control={control}
         name="dataNascimento"
         render={({ field: { onChange, value } }) => (
@@ -143,7 +143,7 @@ const CadastroScreen = () => {
                 testID="dateTimePicker"
                 value={value || new Date()}
                 mode={'date'}
-                display= "spinner"
+                display="spinner"
                 onChange={onDateChange}
               />
             )}

@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
-import { Button, SocialIcon } from 'react-native-elements';
-// import AuthContext from '../contexts/AuthContext';
+
+import { PermissionsAndroid } from 'react-native';
+import { createClient } from '@segment/analytics-react-native';
+import messaging from '@react-native-firebase/messaging';
+import { DeviceTokenPlugin } from '@segment/analytics-react-native-plugin-device-token';
+
 
 const WelcomeScreen = ({ navigation }) => {
+
+  useEffect(() => {
+  console.log('useEffect')
+    const segmentClient = createClient({
+      writeKey: 'ZE-LADOR'
+    });
+    const deviceTokenPlugin = new DeviceTokenPlugin()
+    segmentClient.add({ plugin: deviceTokenPlugin })
+    console.log('token ' + deviceTokenPlugin);
+  }, []);
 
   return (
     <View style={styles.container}>
