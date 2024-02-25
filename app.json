@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "ZeLador",
-    "slug": "ZeLador",
-    "id": "@seu-nome-de-usuario/ZeLador",
+    "slug": "zelador",
+    "id": "43d98853-a236-42a3-b3de-9a662142c02a",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,17 +17,30 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "permissions": ["NOTIFICATIONS"]
+      "permissions": [
+        "NOTIFICATIONS"
+      ]
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["RECEIVE_BOOT_COMPLETED", "VIBRATE", "WAKE_LOCK"]
+      "permissions": [
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE",
+        "WAKE_LOCK"
+      ],
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicron.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "43d98853-a236-42a3-b3de-9a662142c02a"
+      }
+    },
+    "owner": "zelador"
   }
 }
