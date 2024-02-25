@@ -3,6 +3,12 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import helpers from '../helpers/helpers';
 import { Path } from "react-native-svg";
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+import { PermissionsAndroid } from 'react-native';
+import { createClient } from '@segment/analytics-react-native';
+import messaging from '@react-native-firebase/messaging';
+import { DeviceTokenPlugin } from '@segment/analytics-react-native-plugin-device-token';
 
 import axios from 'axios'
 import { Button, Actionsheet, useDisclose, Box, Center, NativeBaseProvider } from "native-base";
@@ -17,79 +23,159 @@ const DashboardScreen = ({ route, navigation }) => {
   const [modulos, setModulos] = useState([]);
   const [user, setUser] = useState({});
   const base64Image = 'data:image/png;base64,' + user.imagem;
+  const [storedExpoToken, setStoredExpoToken] = useState("");
   const {
     isOpen,
     onOpen,
     onClose
   } = useDisclose();
-  
+
   const moduloJaEstaFavoritado = (item, mFavoritos) => {
     return mFavoritos.some(favorito => favorito.nome === item.nome);
   };
 
   useEffect(() => {
     //functions 
-    const loadUser = async (params) => {
-      const url = `https://ze-lador.onrender.com/api/user/who-am-i?token=${params.token}`;
-      const { data } = await axios.get(url);
-      const usuario = {
-        email: params.email,
-        token: params.token,
-        idCondominio: data.idCondominio,
-        idUnidadeUsuario: data.idUnidadeUsuario
+    async function init() {
+      await registerForPushNotificationsExpoAsync();
+
+      const loadUser = async (params) => {
+        const url = `https://ze-lador.onrender.com/api/user/who-am-i?token=${params.token}`;
+        const { data } = await axios.get(url);
+        const usuario = {
+          email: params.email,
+          token: params.token,
+          idCondominio: data.idCondominio,
+          idUnidadeUsuario: data.idUnidadeUsuario
+        };
+        return usuario;
+      }
+
+      const loadAdditionalUserData = async (user) => {
+        const url = `https://ze-lador.onrender.com/api/dashboard/get-additional-user-data-by-unidade-usuario?idUnidadeUsuario=${user.idUnidadeUsuario}`;
+        const { data } = await axios.get(url);
+        setUser(currentUserData => ({
+          ...currentUserData,
+          email: user.email,
+          token: user.token,
+          nome: data.response.nome,
+          condominio: data.response.nomeCondominio,
+          unidade: data.response.unidade,
+          bloco: data.response.bloco,
+          imagem: data.response.imagem,
+          mFavoritos: data.response.modulosFavoritos,
+          tokenDispositivo: data.response.tokenDispositivo,
+          id: data.response.id
+        }));
+      }
+
+      const loadComunicados = async (user) => {
+        console.log(user);
+        const url = `https://ze-lador.onrender.com/api/dashboard/get-comunicados-por-condominio?idCondominio=${user.idCondominio}`;
+        const { data } = await axios.get(url);
+        setComunicados(data.response);
+      }
+
+      const loadNotificacoes = async (user) => {
+        const url = `https://ze-lador.onrender.com/api/dashboard/get-notificacoes?idUnidadeUsuario=${user.idUnidadeUsuario}`;
+        const { data } = await axios.get(url)
+        console.log('teste ' + JSON.stringify(data.response));
+        setNotificacoes(data.response);
+      }
+
+      const loadModulos = async (user) => {
+        const url = `https://ze-lador.onrender.com/api/dashboard/get-modulos-por-condominio?idCondominio=${user.idCondominio}`;
+        const { data } = await axios.get(url)
+        setModulos(data.response);
+      }
+
+      async function registerForPushNotificationsExpoAsync() {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+
+        if (existingStatus !== 'granted') {
+          const { status } = await Notifications.requestPermissionsAsync();
+          finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+          console.log('Failed to get push token for push notification!');
+          return;
+        }
+
+        //token = (await Notifications.getExpoPushTokenAsync()).data;
+        let storedToken = (await Notifications.getExpoPushTokenAsync()).data;
+        console.log('Expo Push Token:', storedToken);
+
+        Notifications.setNotificationHandler({
+          handleNotification: async () => ({
+            shouldShowAlert: true,
+            shouldPlaySound: false,
+            shouldSetBadge: true,
+          }),
+        });
+
+        setStoredExpoToken(storedToken);
+
+        /* call the teste notification method    
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'Testando Notificação',
+            body: "Testezinho",
+          },
+          trigger: null,
+        });
+        */
+      }
+
+      const updateDeviceToken = async (newToken) => {
+        try {
+          console.log("Eh diferente Expo:" + storedExpoToken + " salvo base:" + user.tokenDispositivo);
+          const url = `https://ze-lador.onrender.com/api/user/update-device-token`;
+          const response = await axios.post(url, {
+            id: user.id, // Supondo que você tenha um ID de usuário para associar o token
+            tokenDispositivo: newToken,
+          });
+
+          if (response.status === 200) {
+            console.log('Token atualizado com sucesso.');
+          } else {
+            console.log('Falha ao atualizar o token.', response.data);
+          }
+        } catch (error) {
+          console.error('Erro ao atualizar o token: ', error);
+        }
       };
-      return usuario;
+
+
+      const usuario = await loadUser(userParams);
+      setUser(usuario);
+      await loadAdditionalUserData(usuario);
+
+      await Promise.all([
+        loadComunicados(usuario),
+        loadNotificacoes(usuario),
+        loadModulos(usuario)
+      ]);
+
+      console.log("Verificar token dispositivo");
+      if (storedExpoToken && user.tokenDispositivo &&
+        storedExpoToken !== user.tokenDispositivo) {
+        console.log("Vamos atualizar");
+        updateDeviceToken(storedExpoToken);
+      }
+
     }
 
-    const loadAdditionalUserData = async (user) => {
-      const url = `https://ze-lador.onrender.com/api/dashboard/get-additional-user-data-by-unidade-usuario?idUnidadeUsuario=${user.idUnidadeUsuario}`;
-      const { data } = await axios.get(url);
-      setUser({
-        email: user.email,
-        token: user.token,
-        nome: data.response.nome,
-        condominio: data.response.nomeCondominio,
-        unidade: data.response.unidade,
-        bloco: data.response.bloco,
-        imagem: data.response.imagem,
-        mFavoritos: data.response.modulosFavoritos
-      });
-    }
+    init();
 
-    const loadComunicados = async (user) => {
-      const url = `https://ze-lador.onrender.com/api/dashboard/get-comunicados-por-condominio?idCondominio=${user.idCondominio}`;
-      const { data } = await axios.get(url);
-      setComunicados(data.response);
-    }
-
-    const loadNotificacoes = async (user) => {
-      const url = `https://ze-lador.onrender.com/api/dashboard/get-notificacoes?idUnidadeUsuario=${user.idUnidadeUsuario}`;
-      const { data } = await axios.get(url)
-      console.log('teste ' + JSON.stringify(data.response));
-      setNotificacoes(data.response);
-    }
-
-    const loadModulos = async (user) => {
-      const url = `https://ze-lador.onrender.com/api/dashboard/get-modulos-por-condominio?idCondominio=${user.idCondominio}`;
-      const { data } = await axios.get(url)
-      setModulos(data.response);
-    }
-
-    //calling
-    loadUser(userParams).then((usuario) => {
-      loadAdditionalUserData(usuario);
-      loadComunicados(usuario);
-      loadNotificacoes(usuario);
-      loadModulos(usuario);
-    });
-  }, []);
+  }, [userParams, storedExpoToken]);
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate('Notificações')}>
-          <Image         
+          <Image
             source={{ uri: base64Image }}
             style={styles.userPhoto}
           />
@@ -109,8 +195,8 @@ const DashboardScreen = ({ route, navigation }) => {
 
         {notificacoes !== undefined && notificacoes.length > 0 &&
           <View style={{ paddingRight: '53px' }}>
-            <Icon   name="notifications" size={30} color="#e6e600" onPress={() => navigation.navigate('Notificações', notificacoes.map(a => a.idUnidadeUsuario)[0])}/>
-            <Text  style={{ alignSelf: 'center' }}>{notificacoes.length}</Text>
+            <Icon name="notifications" size={30} color="#e6e600" onPress={() => navigation.navigate('Notificações', notificacoes.map(a => a.idUnidadeUsuario)[0])} />
+            <Text style={{ alignSelf: 'center' }}>{notificacoes.length}</Text>
           </View>
         }
         {notificacoes !== undefined && notificacoes.length === 0 &&
@@ -132,39 +218,39 @@ const DashboardScreen = ({ route, navigation }) => {
       {/* Services Buttons */}
       <View style={styles.services}>
 
-       {user.mFavoritos !== undefined && user.mFavoritos.length > 0 && user.mFavoritos.map((item, index) => (
-        <TouchableOpacity key={index} style={styles.serviceButton}>
-          <Icon name={item.imagem} size={30} />
-          <Text>{item.nome}</Text>
-        </TouchableOpacity>
-      ))}
-      
-      {user.mFavoritos !== undefined && user.mFavoritos.length > 0 && user.mFavoritos.length < 4 && (
-        <TouchableOpacity onPress={onOpen} style={styles.serviceButton}>
-          <Icon name="add-circle-outline" size={30} />
-          <Actionsheet isOpen={isOpen} onClose={onClose}>
-                    <Actionsheet.Content>
-                    <Box w="100%" h={60} px={4} justifyContent="center">
-                        <Text fontSize="16" color="gray.500" _dark={{
-                        color: "gray.300"
-                    }}>
-                        Atalhos
-                        </Text>
-                    </Box>
+        {user.mFavoritos !== undefined && user.mFavoritos.length > 0 && user.mFavoritos.map((item, index) => (
+          <TouchableOpacity key={index} style={styles.serviceButton}>
+            <Icon name={item.imagem} size={30} />
+            <Text>{item.nome}</Text>
+          </TouchableOpacity>
+        ))}
 
-                    {modulos !== undefined && modulos.length > 0 && modulos.map((item, index) => (
-                      !moduloJaEstaFavoritado(item, user.mFavoritos) && (
-                        <Actionsheet.Item  startIcon={<Icon as={MaterialIcons} name={item.imagem} size={21}/>}>
-                          {item.nome}
-                        </Actionsheet.Item>
-                      )
-                    ))}
-                    </Actionsheet.Content>
-                </Actionsheet>
-          <Text>Adicionar atalho</Text>
-        </TouchableOpacity>
-      )}
-      </View>      
+        {user.mFavoritos !== undefined && user.mFavoritos.length > 0 && user.mFavoritos.length < 4 && (
+          <TouchableOpacity onPress={onOpen} style={styles.serviceButton}>
+            <Icon name="add-circle-outline" size={30} />
+            <Actionsheet isOpen={isOpen} onClose={onClose}>
+              <Actionsheet.Content>
+                <Box w="100%" h={60} px={4} justifyContent="center">
+                  <Text fontSize="16" color="gray.500" _dark={{
+                    color: "gray.300"
+                  }}>
+                    Atalhos
+                  </Text>
+                </Box>
+
+                {modulos !== undefined && modulos.length > 0 && modulos.map((item, index) => (
+                  !moduloJaEstaFavoritado(item, user.mFavoritos) && (
+                    <Actionsheet.Item startIcon={<Icon as={MaterialIcons} name={item.imagem} size={21} />}>
+                      {item.nome}
+                    </Actionsheet.Item>
+                  )
+                ))}
+              </Actionsheet.Content>
+            </Actionsheet>
+            <Text>Adicionar atalho</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 };
@@ -172,7 +258,7 @@ const DashboardScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:  '#f8f8f8',
+    backgroundColor: '#f8f8f8',
   },
   header: {
     flexDirection: 'row',

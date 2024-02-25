@@ -1,27 +1,11 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
 
-import { PermissionsAndroid } from 'react-native';
-import { createClient } from '@segment/analytics-react-native';
-import messaging from '@react-native-firebase/messaging';
-import { DeviceTokenPlugin } from '@segment/analytics-react-native-plugin-device-token';
 
 
 const WelcomeScreen = ({ navigation }) => {
-  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-
+  
   useEffect(() => {
-    console.log('useEffect')
-
-    const segmentClient = createClient({
-      writeKey: 'ZE-LADOR'
-    });
-    
-    // const teste = messaging().getToken();
-    // console.log('token1 ' + JSON.stringify(teste));
-    const deviceTokenPlugin = new DeviceTokenPlugin()
-    segmentClient.add({ plugin: deviceTokenPlugin })
-    console.log('token ' + JSON.stringify(deviceTokenPlugin));
   }, []);
 
   return (
